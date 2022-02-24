@@ -15,9 +15,24 @@
 
   这里选用方案二
 
+## 文件说明
+
+- python虚拟环境
+  
+  - Lib
+  
+  - Scripts
+
+  - pyvenv.cfg
+
+  - Include
+
+  - requirements.txt(打包环境需要的依赖)
+
 ### 0.0.1版（基本功能）
 
 输入：n个云南大学学生课表
+
 输出：m种空闲时间值班表，表示m种值班方案
 
 其他：
