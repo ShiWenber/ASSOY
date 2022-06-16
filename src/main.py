@@ -41,12 +41,12 @@ def getStudentsList():
     return students
 # 生成迭代器和返回列表的区别：迭代器不能通过[]访问某个内容也不能直接赋值给列表，传参不便，而列表可以通过[]访问某个内容，其他区别
         
-def displayNumTables(Students=getStudentsList()):
+def displayNumTables(Students):
     for student_i in Students:
         print(student_i.getNumTable())
         
 
-def to_freeTable(students=getStudentsList()):
+def to_freeTable(students, sumkey=False):
     freeTable = pd.DataFrame(data='', index=students[0].getNumTable().index, columns=students[0].getNumTable().columns)  
     row, column = students[0].getNumTable().shape
 
@@ -73,12 +73,15 @@ def to_freeTable(students=getStudentsList()):
                     freeTable.iloc[i, j] += '错误课表:  {}'.format(student_i.getName())
                     print('错误课表:  {}'.format(student_i.getName()))
             # 统计信息
-            freeTable.iloc[i, j] += '-------\n无课：\n单周{}人\n双周{}人\n-------\n'.format(singular_num, even_num)  
-            if students[0].getNumTable().index[i] == '7-8节' and students[0].getNumTable().columns[j] == '星期五':
-                print(freeTable.loc['7-8节', '星期五'])
+            if sumkey:
+                freeTable.iloc[i, j] += '-------\n无课：\n单周{}人\n双周{}人\n-------\n'.format(singular_num, even_num)  
+            else:
+                pass
+            # if students[0].getNumTable().index[i] == '7-8节' and students[0].getNumTable().columns[j] == '星期五':
+            #     print(freeTable.loc['7-8节', '星期五'])
                      
     freeTable.to_excel(".\\freeTable\\freeTable.xlsx")
-    print(freeTable)
+    print(freeTable) # 输出显示freeTable
     return freeTable
 
 
@@ -162,14 +165,7 @@ def to_numTable(inputSheet):
     
     # 保存数字表
     sheet.to_excel(".\\numTable\\" + f) # 将数字化的课表保存为excel
-    
-if __name__ == "__main__":
-    base = os.getcwd() + '\\input'
-    for f in os.listdir(base):
-        fullname = os.path.join(base, f)
-        to_numTable(fullname)
-    to_freeTable()
-    
+
 
 # # 直接运行有报错
 #   warn("Workbook contains no default style, apply openpyxl's default")
@@ -186,4 +182,5 @@ if __name__ == "__main__":
     for f in os.listdir(base):
         fullname = os.path.join(base, f)
         to_numTable(fullname)
-    to_freeTable()
+    to_freeTable(getStudentsList())
+    print(getStudentsList()[0].getStrTable())
