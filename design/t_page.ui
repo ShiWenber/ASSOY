@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>t_page</class>
+ <widget class="QWidget" name="t_page">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>786</width>
+    <height>307</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QComboBox" name="comboBox"/>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <row>
+      <property name="text">
+       <string>1-2节</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>3-4节</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>5-6节</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>7-8节</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>9-10节</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>周一</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>周二</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>周三</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>周四</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>周五</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>周六</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>周日</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
