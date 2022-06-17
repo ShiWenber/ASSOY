@@ -1,5 +1,20 @@
 import pandas as pd
 import os
+        
+# -------------view
+def displayNumTables(Students):
+    for student_i in Students:
+        print(student_i.getNumTable())
+
+def importTable():
+    file = 'initVenv.ps1'
+    file = os.path.realpath(file)
+    print(file)
+    os.system(f'explorer /select, {file}')    
+    # table = pd.read_excel(filepath, header=0, index_col=0)
+    # return table        
+
+
 
 
 class Student(object):
@@ -30,8 +45,8 @@ def initStudents(base=(os.getcwd()+'\\numTable')):
     for f in os.listdir(base):
         name = os.path.splitext(f)[0] # os.path.splitext会截断文件名和后缀产生长为2的元组('fileName', '.txt')
         numTable = pd.read_excel(base+'\\'+f, header=0, index_col=0)
-        # strTable = pd.read_excel(base+'\\'+f, header=1) # strTable先不读，作为后续升级功能
-        yield Student(name, numTable)
+        strTable = pd.read_excel(base+'\\'+f, header=1) # strTable先不读，作为后续升级功能
+        yield Student(name, numTable, strTable)
  
 # initStudents()不直接使用，一般通过getStudentsList()获取列表    
 def getStudentsList():
@@ -40,11 +55,9 @@ def getStudentsList():
         students.append(i)
     return students
 # 生成迭代器和返回列表的区别：迭代器不能通过[]访问某个内容也不能直接赋值给列表，传参不便，而列表可以通过[]访问某个内容，其他区别
-        
-def displayNumTables(Students):
-    for student_i in Students:
-        print(student_i.getNumTable())
-        
+
+
+# -----------dao
 
 def to_freeTable(students, sumkey=False):
     freeTable = pd.DataFrame(data='', index=students[0].getNumTable().index, columns=students[0].getNumTable().columns)  
@@ -81,6 +94,7 @@ def to_freeTable(students, sumkey=False):
             #     print(freeTable.loc['7-8节', '星期五'])
                      
     freeTable.to_excel(".\\freeTable\\freeTable.xlsx")
+    
     print(freeTable) # 输出显示freeTable
     return freeTable
 
@@ -178,9 +192,10 @@ def to_numTable(inputSheet):
 # 但是分两次运行先提取numTable再提取freeTable，可以解决这个问题，或者直接运行两次，猜测是文件写入尚未完成就开始输出freeTable导致的, 改进：在两操作中加时延或者等待一个标志再输出
 # 可能文件读入尚未完成导致读取第一个文件的内容时报错尚未刷新需要重开进程 ？？？？？
 if __name__ == "__main__":
-    base = os.getcwd() + '\\input'
-    for f in os.listdir(base):
-        fullname = os.path.join(base, f)
-        to_numTable(fullname)
-    to_freeTable(getStudentsList())
-    print(getStudentsList()[0].getStrTable())
+    # base = os.getcwd() + '\\input'
+    # for f in os.listdir(base):
+    #     fullname = os.path.join(base, f)
+    #     to_numTable(fullname)
+    # to_freeTable(getStudentsList())
+    # print(getStudentsList()[0].getStrTable())
+    importTable()
