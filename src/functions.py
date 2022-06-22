@@ -69,17 +69,20 @@ class Student(object):
     def getStrTable(self):
         return self.strTable
 
+
 def initFiles(base=os.getcwd()):
     """初始化文件
     """
     # 初始化数据
     clearOutFile()
-    inputpath =base + '\\input'
+    inputpath = base + '\\input'
     for f in os.listdir(inputpath):
         fullname = os.path.join(inputpath, f)
         to_numTable(fullname)
 
 # '\\numTable'
+
+
 def initStudents(base=os.getcwd()):
     """初始化学生列表
     初始化使用浅拷贝
@@ -94,8 +97,8 @@ def initStudents(base=os.getcwd()):
         # os.path.splitext会截断文件名和后缀产生长为2的元组('fileName', '.txt')
         name = os.path.splitext(f)[0]
         numTable = pd.read_excel(base+'\\numTable\\'+f, header=0, index_col=0)
-        # strTable先不读，作为后续升级功能
         strTable = pd.read_excel(base+'\\strTable\\'+f, header=0, index_col=0)
+        strTable.fillna('', inplace=True)
         yield Student(name, numTable, strTable)
 
 # initStudents()不直接使用，一般通过getStudentsList()获取列表
@@ -209,16 +212,41 @@ def to_numTable(inputSheet):
         else:
             end = i
     sheet.drop(range(end + 1, sheet.shape[0]), inplace=True)  # 删除多余行(结束行之后的行)
-    sheet.fillna(0, inplace=True)  # 将空值替换为0
 
-    # 保存可阅读的字符串课表，但是同一时间段不合并
+    # to_strTable(sheet, tag)-----------------------------------
+    """
+    args: sheet(DataFrame): 做初步处理后的
+    tag(num/str): 去除特定行的标识 
+    
+    """
+    # 保存可阅读的字符串课表
     path, f = os.path.split(inputSheet)
     str_sheet = sheet.copy(deep=True)  # 深拷贝
-    # 重新索引,并且删除旧的index，不然会把旧的index加入数据中
-    str_sheet.set_index(sheet.columns[0], drop=True, inplace=True)
-    str_sheet.to_excel(".\\strTable\\" + f)  # 将简化的课表保存为excel
 
-    # 将课表中的数据转换为数字，并将同一时间段合并
+    str_sheet.fillna('', inplace=True)  # 将空值替换为空字符串
+
+    # 合并行，将同一时间段的课程情况合并,python的for迭代器循环无法实现代表变元i的复位,因此使用while循环
+    i = 0
+    tempstr = str()
+    while i + 1 < str_sheet.shape[0]:
+        nextPeriod = str_sheet.iloc[i + 1, 0]
+        if nextPeriod == '':
+            for j in range(1, str_sheet.shape[1]):
+                tempstr = str_sheet.iloc[i, j] + '\n' + str_sheet.iloc[i + 1, j]
+                str_sheet.iloc[i, j] = tempstr
+
+            str_sheet.drop(str_sheet.index[i + 1], inplace=True)
+            i = i - 1  # 复位，因为删除了一行，所以i要减1
+        i = i + 1
+
+    # 重新索引,并t且删除旧的index，不然会把旧的index加入数据中
+    str_sheet.set_index(str_sheet.columns[0], drop=True, inplace=True)
+    str_sheet.to_excel(".\\strTable\\" + f)  # 将简化的课表保存为excel
+  # -----------------------
+
+    sheet.fillna(0, inplace=True)  # 将空值替换为0
+
+   # 将课表中的数据转换为数字，并将同一时间段合并
     for i in range(sheet.shape[0]):
         # 上课时间段没必要遍历, 故从下标1开始
         for j in range(1, sheet.shape[1]):
