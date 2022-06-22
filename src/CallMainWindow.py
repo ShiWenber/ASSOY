@@ -1,7 +1,8 @@
 # https://blog.csdn.net/qq_41398808/article/details/102813181
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
-from fileopen import Ui_MainWindow
+# 从ui文件夹中导入界面，实现界面和程序的分离
+from ui.fileopen import Ui_MainWindow
 import sys
 import os
 from shutil import copy
