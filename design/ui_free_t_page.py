@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 't_gen_page.ui'
+# Form implementation generated from reading ui file 'free_t_page.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -11,13 +11,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_t_page(object):
-    def setupUi(self, t_page):
-        t_page.setObjectName("t_page")
-        t_page.resize(837, 296)
-        self.verticalLayout = QtWidgets.QVBoxLayout(t_page)
+class Ui_free_t_page(object):
+    def setupUi(self, free_t_page):
+        free_t_page.setObjectName("free_t_page")
+        free_t_page.resize(837, 296)
+        self.verticalLayout = QtWidgets.QVBoxLayout(free_t_page)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.tableWidget = QtWidgets.QTableWidget(t_page)
+        self.tableWidget = QtWidgets.QTableWidget(free_t_page)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(7)
         self.tableWidget.setRowCount(5)
@@ -50,48 +50,48 @@ class Ui_t_page(object):
         self.verticalLayout.addWidget(self.tableWidget)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pd_clear = QtWidgets.QPushButton(t_page)
-        self.pd_clear.setMaximumSize(QtCore.QSize(150, 23))
-        self.pd_clear.setObjectName("pd_clear")
-        self.horizontalLayout.addWidget(self.pd_clear)
-        self.pd_auto = QtWidgets.QPushButton(t_page)
-        self.pd_auto.setMaximumSize(QtCore.QSize(150, 23))
-        self.pd_auto.setObjectName("pd_auto")
-        self.horizontalLayout.addWidget(self.pd_auto)
+        self.pb_del = QtWidgets.QPushButton(free_t_page)
+        self.pb_del.setMaximumSize(QtCore.QSize(150, 23))
+        self.pb_del.setObjectName("pb_del")
+        self.horizontalLayout.addWidget(self.pb_del)
+        self.pb_open_path = QtWidgets.QPushButton(free_t_page)
+        self.pb_open_path.setMaximumSize(QtCore.QSize(150, 23))
+        self.pb_open_path.setObjectName("pb_open_path")
+        self.horizontalLayout.addWidget(self.pb_open_path)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.retranslateUi(t_page)
-        QtCore.QMetaObject.connectSlotsByName(t_page)
+        self.retranslateUi(free_t_page)
+        QtCore.QMetaObject.connectSlotsByName(free_t_page)
 
-    def retranslateUi(self, t_page):
+    def retranslateUi(self, free_t_page):
         _translate = QtCore.QCoreApplication.translate
-        t_page.setWindowTitle(_translate("t_page", "Form"))
+        free_t_page.setWindowTitle(_translate("free_t_page", "Form"))
         item = self.tableWidget.verticalHeaderItem(0)
-        item.setText(_translate("t_page", "1-2节"))
+        item.setText(_translate("free_t_page", "1-2节"))
         item = self.tableWidget.verticalHeaderItem(1)
-        item.setText(_translate("t_page", "3-4节"))
+        item.setText(_translate("free_t_page", "3-4节"))
         item = self.tableWidget.verticalHeaderItem(2)
-        item.setText(_translate("t_page", "5-6节"))
+        item.setText(_translate("free_t_page", "5-6节"))
         item = self.tableWidget.verticalHeaderItem(3)
-        item.setText(_translate("t_page", "7-8节"))
+        item.setText(_translate("free_t_page", "7-8节"))
         item = self.tableWidget.verticalHeaderItem(4)
-        item.setText(_translate("t_page", "9-10节"))
+        item.setText(_translate("free_t_page", "9-10节"))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("t_page", "周一"))
+        item.setText(_translate("free_t_page", "周一"))
         item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("t_page", "周二"))
+        item.setText(_translate("free_t_page", "周二"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("t_page", "周三"))
+        item.setText(_translate("free_t_page", "周三"))
         item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("t_page", "周四"))
+        item.setText(_translate("free_t_page", "周四"))
         item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText(_translate("t_page", "周五"))
+        item.setText(_translate("free_t_page", "周五"))
         item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("t_page", "周六"))
+        item.setText(_translate("free_t_page", "周六"))
         item = self.tableWidget.horizontalHeaderItem(6)
-        item.setText(_translate("t_page", "周日"))
+        item.setText(_translate("free_t_page", "周日"))
         __sortingEnabled = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
         self.tableWidget.setSortingEnabled(__sortingEnabled)
-        self.pd_clear.setText(_translate("t_page", "清空"))
-        self.pd_auto.setText(_translate("t_page", "自适调整"))
+        self.pb_del.setText(_translate("free_t_page", "删除该表"))
+        self.pb_open_path.setText(_translate("free_t_page", "打开文件位置"))
