@@ -52,7 +52,7 @@ class Student(object):
 
     def __init__(self, name=None, numTable=None, strTable=None):
         self.name = name
-        self.dutyTime = []  # 存放学生的值班时间，每个元素为一个二元列表['周一', '9-10节']，用append()方法添加,用len()方法获取长度
+        self.dutyTime = []  # 存放学生的值班时间，每个元素为一个二元列表例如用[0,4]表示['周一', '9-10节']，用append()方法添加,用len()方法获取长度
         self.numTable = numTable
         self.strTable = strTable
         # self.tableRow, self.tableColumn = self.numTable.shape
@@ -60,7 +60,7 @@ class Student(object):
     def getName(self):
         return self.name
 
-    def getDutytime(self):
+    def getDutyTime(self):
         return self.dutyTime
 
     def getNumTable(self):
@@ -68,6 +68,15 @@ class Student(object):
 
     def getStrTable(self):
         return self.strTable
+
+    def setDutyTime(self, row_num, column_num):
+        """设置值班时间
+
+        Args:
+            row_tag (str): 行标签
+            column_tag (str): 列标签
+        """
+        self.dutyTime.append([row_num, column_num])
 
 
 def initFiles(base=os.getcwd()):
@@ -120,19 +129,27 @@ def getStudentsList():
 # -----------dao
 
 def to_freeTable(students, sumkey=False):
-    """将学生的课表转化为空闲表
+    """将学生列表转化为空闲课表
 
     Args:
-        students (list[Student]): 学生列表
-        sumkey (bool, optional): 是否在生成的空闲表中添加总计字段. Defaults to False.
+        students (list(students)): 学生列表
+        sumkey (bool, optional): 标志是否要在freeTable_str的每个单元格添加总计信息. Defaults to False.
 
     Returns:
-        DataFrame: pandas中的二维数据类型，存储空闲表
+        freeTable_str, freeTable_obj: 保存到文件，并且返回一个字符串表和一个对象表 
     """
     freeTable = pd.DataFrame(data='', index=students[0].getNumTable(
     ).index, columns=students[0].getNumTable().columns)
     row, column = students[0].getNumTable().shape
 
+    # 初始化一个freeTable每个单元格存储的是对象类型
+    freeTable_obj = freeTable.copy()
+    for i in range(row):
+        for j in range(column):
+            freeTable_obj.iloc[i, j] = list()
+    print(freeTable_obj) 
+
+    
     for i in range(row):
         for j in range(column):
             singular_num = 0
@@ -144,12 +161,21 @@ def to_freeTable(students, sumkey=False):
                     freeTable.iloc[i, j] += student_i.getName() + '\n'
                     singular_num += 1
                     even_num += 1
+
+                    freeTable_obj.iloc[i, j].append(student_i) # 这里对象表没有考虑单双周，留作后面改进
+
                 elif student_i.getNumTable().iloc[i, j] == 2:  # 双数周有课，单数周没课
                     freeTable.iloc[i, j] += student_i.getName() + '(单数周空闲)\n'
                     singular_num += 1
+
+                    freeTable_obj.iloc[i, j].append(student_i)
+
                 elif student_i.getNumTable().iloc[i, j] == 1:  # 单数周有课，双数周没课
                     freeTable.iloc[i, j] += student_i.getName() + '(双数周空闲)\n'
                     even_num += 1
+
+                    freeTable_obj.iloc[i, j].append(student_i)
+
                 elif student_i.getNumTable().iloc[i, j] == 3:
                     pass
                 else:
@@ -168,7 +194,7 @@ def to_freeTable(students, sumkey=False):
     freeTable.to_excel(".\\freeTable\\freeTable.xlsx")
 
     print(freeTable)  # 输出显示freeTable
-    return freeTable
+    return freeTable, freeTable_obj
 
 
 # # times表示一人一周值班次数， 且一人一日最多只会值一班
@@ -183,6 +209,74 @@ def to_freeTable(students, sumkey=False):
 #             for student_i in students:
 #                 names = student_i.iloc[i,j].split('\n')
 #                 if names[0]
+
+def to_dutyTable(students):
+    import random as rd
+    freeTabel_str, freeTable_obj = to_freeTable(students)
+    sort_list = []
+    for i in range(5):
+        for j in range(7):
+            sort_list.append([i, j, len(freeTable_obj.iloc[i, j])])
+    sort_list.sort(key=lambda x: x[2])
+    while sort_list[0][2] == 0:
+        sort_list.pop(0)
+    print(sort_list)
+
+    res = []
+    # 依次pop出来进行处理
+    while len(sort_list) > 0:
+        # 如果num为0就pop出来
+        if sort_list[0][2] == 0:
+            sort_list.pop(0)
+            continue
+        # 在i, j位置随机选择一个同学值班
+        i, j, num = sort_list[0]
+        # 随机选择一个同学放在该位置值班
+        selected_student = Student()
+        selected_student = freeTable_obj.iloc[i, j][rd.choice(range(num))]
+
+        # 一个同学不能一天值班多次，一周最多值班2次
+        if len(selected_student.getDutyTime()) < 2:
+            if len(selected_student.getDutyTime()) == 0:
+                selected_student.setDutyTime(i, j)
+                print(selected_student.getName())
+                print(selected_student.getDutyTime())
+                res.append([i, j, selected_student])
+                
+                # 从freeTable中删除该同学
+                freeTable_obj.iloc[i, j].remove(selected_student)
+                freeTable_obj
+                sort_list.pop(0)
+                continue
+            if abs(selected_student.getDutyTime()[0][1] - j) > 1:
+                # 如果同学上一次值班不是在同一天，则可以值班
+                selected_student.setDutyTime(i, j)
+                print(selected_student.getName())
+                print(selected_student.getDutyTime())
+                res.append([i, j, selected_student])
+
+                # 从freeTable中删除该同学
+                freeTable_obj.iloc[i, j].remove(selected_student)
+                sort_list.pop(0)
+            else:
+                # 从对象表中移除该同学
+                freeTable_obj.iloc[i, j].remove(selected_student)
+                # 更新该区可选人数
+                sort_list[0][2] = len(freeTable_obj.iloc[i, j])
+                continue
+        else:
+            # 从对象表中移除该同学
+            freeTable_obj.iloc[i, j].remove(selected_student)
+            # 更新该区可选人数
+            sort_list[0][2] = len(freeTable_obj.iloc[i, j])
+            continue
+    return res, students
+
+
+       
+
+
+    
 
 
 def to_numTable(inputSheet):

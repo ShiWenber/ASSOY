@@ -2,6 +2,7 @@
 信号量定义为类的方法是为了和其他界面通信，如果仅仅在页面内部使用信号量，则可以直接connect()方法
 """
 from locale import currency
+from msilib.schema import ComboBox
 from re import U
 from turtle import clear
 from matplotlib.pyplot import show
@@ -60,6 +61,12 @@ class Start_page(QtWidgets.QMainWindow, Ui_MainWindow):
 
 # 查看课表窗口
 class T_page(QtWidgets.QWidget, Ui_t_page):
+    """查看课表窗口类的方法
+
+    Args:
+        QtWidgets (_type_): _description_
+        Ui_t_page (_type_): 自定义图形界面类
+    """
     switch_view_start_page = QtCore.pyqtSignal()  # 跳转信号, 在表格查看界面跳转到主界面
     # switch_del = QtCore.pyqtSignal()  # 信号, 删除当前课表
     # switch_del_all = QtCore.pyqtSignal()  # 信号, 删除全部课表
@@ -172,12 +179,91 @@ class T_page(QtWidgets.QWidget, Ui_t_page):
 
 
 # 生成排班表窗口
+# 获取(x,y)的值
+# self.tableWidget.cellWidget(x,y).currentText()
+# self.tableWidget.item(d_row,d_col).text()#获取某行某列item中的x信息
+
 class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
     switch_view_start_page = QtCore.pyqtSignal()  # 跳转信号, 在表格查看界面跳转到主界面
+    students = []
+    freeTable_str = []
+    freeTable_obj = []
+    dutylist = []
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.pb_repro.clicked.connect(self.repro)
+        self.pb_clear.clicked.connect(self.clearTable)
+
+        self.students = getStudentsList()
+        self.freeTable_str, self.freeTable_obj = to_freeTable(self.students)
+
+        # combox = QtWidgets.QComboBox()
+        # combox.addItem("请选择学生")
+
+        self.dutylist, self.students = to_dutyTable(self.students)
+
+        print(self.dutylist)
+        # 打印值班表
+        exist = 0
+        for i in range(5):
+            for j in range(7):
+                for k in self.dutylist:
+                    if k[0] == i and k[1] == j:
+                        # print(k[2].getName(), end=' ')
+                        self.tableWidget.setItem(
+                            i, j, QtWidgets.QTableWidgetItem(k[2].getName()))
+                        self.dutylist.remove(k)
+                        exist = 1
+                        break
+                if exist == 0:
+                    # print('-', end=' ')
+                    self.tableWidget.setItem(
+                        i, j, QtWidgets.QTableWidgetItem('无'))
+                else:
+                    exist = 0
+            print()
+
+        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.resizeRowsToContents()
+
+    def clearTable(self):
+        self.tableWidget.clearContents()
+
+    def repro(self):
+        self.students = getStudentsList()
+        self.freeTable_str, self.freeTable_obj = to_freeTable(self.students)
+
+        # combox = QtWidgets.QComboBox()
+        # combox.addItem("请选择学生")
+
+        self.dutylist, self.students = to_dutyTable(self.students)
+
+        print(self.dutylist)
+        # 打印值班表
+        exist = 0
+        for i in range(5):
+            for j in range(7):
+                for k in self.dutylist:
+                    if k[0] == i and k[1] == j:
+                        # print(k[2].getName(), end=' ')
+                        self.tableWidget.setItem(
+                            i, j, QtWidgets.QTableWidgetItem(k[2].getName()))
+                        self.dutylist.remove(k)
+                        exist = 1
+                        break
+                if exist == 0:
+                    # print('-', end=' ')
+                    self.tableWidget.setItem(
+                        i, j, QtWidgets.QTableWidgetItem('无'))
+                else:
+                    exist = 0
+            print()
+
+        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.resizeRowsToContents()
 
     def closeEvent(self, event):
         """重写closeEvent方法，实现窗口关闭时询问是否返回主界面
@@ -203,6 +289,12 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
 
 
 class Free_t_page(QtWidgets.QWidget, Ui_free_t_page):
+    """生成空闲表
+
+    Args:
+        QtWidgets (Qtwidgets): form父类
+        Ui_free_t_page (Ui_free_t_page): 自定义图形界面类
+    """
     switch_view_start_page = QtCore.pyqtSignal()  # 跳转信号, 在表格查看界面跳转到主界面
 
     def __init__(self):
@@ -217,7 +309,7 @@ class Free_t_page(QtWidgets.QWidget, Ui_free_t_page):
         self.pb_del.clicked.connect(self.del_t)
         self.pb_open_path.clicked.connect(self.open_path)
 
-        t = to_freeTable(self.students)
+        t, freeTable_obj = to_freeTable(self.students)
         print(t)
         for i in range(5):
             for j in range(7):
@@ -244,7 +336,7 @@ class Free_t_page(QtWidgets.QWidget, Ui_free_t_page):
         self.refresh_page()
 
     def show_t(self):
-        t = to_freeTable(self.students)
+        t, freeTable_obj = to_freeTable(self.students)
         print(t)
         for i in range(5):
             for j in range(7):
