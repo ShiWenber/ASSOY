@@ -212,20 +212,25 @@ def to_freeTable(students, sumkey=False):
 
 def to_dutyTable(students):
     import random as rd
-    freeTabel_str, freeTable_obj = to_freeTable(students)
+    # 获得一个freeTable（DataFrame类型，表中元素为student列表类型）的对象
+    freeTable_str, freeTable_obj = to_freeTable(students)
+    # 用来记录每个单元格的空闲人数，sort_list中每个单元的元素为三元列表，[i, j, num]，i, j用来定位该时间快在表中的行列数，num为空闲人数
     sort_list = []
     for i in range(5):
         for j in range(7):
+            # 存入三元列表
             sort_list.append([i, j, len(freeTable_obj.iloc[i, j])])
+    # 按照空闲人数排序，从小到大，以便后面先安排空闲人数最少的时间块
     sort_list.sort(key=lambda x: x[2])
+    # 空闲人数为0的时间块无法排班，直接栈出
     while sort_list[0][2] == 0:
         sort_list.pop(0)
     print(sort_list)
 
     res = []
-    # 依次pop出来进行处理
+    # 从sort_list中顺次pop出来进行处理，保证先安排空闲人数少的时间块，在安排空闲人数多的时间块
     while len(sort_list) > 0:
-        # 如果num为0就pop出来
+        # 如果num为0就pop出来，也是该循环的退出条件，保证不会死循环
         if sort_list[0][2] == 0:
             sort_list.pop(0)
             continue
