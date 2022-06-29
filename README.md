@@ -16,7 +16,7 @@
 >
 > ![image-20220629202217502](README.assets/image-20220629202217502.png)
 
-1. 下载该源码包
+1. 下载该源码包，或者命令行用`git clone https://github.com/ShiWenber/ASSOY.git`下载源码（需要配置git工具） 
 
 2. 命令行进入源码包文件ASSOY，执行updateVenv.ps1脚本
 
