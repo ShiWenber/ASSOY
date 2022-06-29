@@ -2,10 +2,10 @@
 
 ## 安装说明
 
-| 环境说明         |                                             |
+|          |                                            环境说明 |
 | ---------------- | ------------------------------------------- |
 | 操作系统         | windows10以上                               |
-| 语言环境         | python3.4以上                               |
+| 语言环境         | python3.8以上                               |
 | powershell命令行 | windows10以上自带，但是需要开启脚本运行权限 |
 
 > 开启脚本运行权限
@@ -146,7 +146,7 @@
    > <!--待改进,上课周数的区别没有考虑，有精度丢失-->
    >
    > ```python
-   > 	sheet = pd.read_excel(inputSheet, index_col=None,
+   >  sheet = pd.read_excel(inputSheet, index_col=None,
    >                           header=3)  # 读取数据,不使用原表中的数据为表头,不使用原数据作为index
    >     sheet.dropna(axis=0, how='all', inplace=True)  # 删除全空的行
    >     # 重新索引,并且删除旧的index，不然会把旧的index加入数据中
@@ -175,7 +175,7 @@
 
    >类名：人
    >
-   >属性：姓名，课程表（numtable形式和strTable形式），值班时间用二元组表示如用[0,4]表示['周一', '9-10节']，星期在前，节数在后
+   >属性：姓名，课程表（numTable形式和strTable形式），值班时间用二元组表示如用[0,4]表示['周一', '9-10节']，星期在前，节数在后
    >
    >```python
    >
@@ -212,13 +212,13 @@
    >        """设置值班时间
    >
    >        Args:
-   >            row_tag (str): 行标签
-   >            column_tag (str): 列标签
+   >            row_num (int): 行数
+   >            column_num (int): 列数
    >        """
    >        self.dutyTime.append([row_num, column_num])
    >```
    >
-   >3.值班表生成的算法问题(算法方案4)
+   >3.值班表生成的算法问题(算法方向4)
    >
    >```python
    >def to_dutyTable(students):
@@ -290,9 +290,8 @@
    >
    >```
    >
-   >
 
-## 文件说明
+## 文件结构说明
 
 - python虚拟环境
   
