@@ -73,8 +73,8 @@ class Student(object):
         """设置值班时间
 
         Args:
-            row_tag (str): 行标签
-            column_tag (str): 列标签
+            row_num (int): 行数
+            column_num (int): 列数
         """
         self.dutyTime.append([row_num, column_num])
 
