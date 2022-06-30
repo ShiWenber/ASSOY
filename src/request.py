@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import time
 
-# --------------------------------
+# ----cookies部分，可能会过期，需要手动登录后将新的cookies填入------------
 
 
 url = "https://ehall.ynu.edu.cn/jwapp/sys/wdkb/modules/xskcb/xskcb.do"
@@ -22,10 +22,12 @@ print(response.text)
 
 # ----------------
 
+# 存储爬到的json数据
 file = open("./request.json", "w", encoding="UTF-8")
 file.write(response.text)
 file.close()
 
+# 打开爬取的文件，分析json数据生成dataframe
 f = open("./request.json", "r",encoding = "UTF-8")
 info_data = json.load(f)
 ls1=[]
@@ -82,7 +84,7 @@ df.index=['1-2节','3-4节','5-6节','7-8节','9-10节']
 print(df)
 
 
-
+# 将dataframe类型的课表保存为excel文件
 df.to_excel('./request.xlsx')
 time.sleep(4)
 os.system('powershell .\\opent.ps1')

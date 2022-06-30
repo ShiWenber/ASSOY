@@ -22,6 +22,12 @@ import os
 
 # 主窗口
 class Start_page(QtWidgets.QMainWindow, Ui_MainWindow):
+    """主页面类
+
+    Args:
+        QtWidgets (_type_): _description_
+        Ui_MainWindow (_type_): 自定义图像界面类
+    """
     switch_view_t = QtCore.pyqtSignal()  # 跳转信号, 在主界面跳转到表格查看
     switch_gen_duty_t = QtCore.pyqtSignal()  # 跳转信号, 在主界面跳转到排班表
     switch_gen_free_t = QtCore.pyqtSignal()  # 跳转信号, 在主界面跳转到空闲表生成
@@ -61,7 +67,7 @@ class Start_page(QtWidgets.QMainWindow, Ui_MainWindow):
 
 # 查看课表窗口
 class T_page(QtWidgets.QWidget, Ui_t_page):
-    """查看课表窗口类的方法
+    """查看课表窗口类
 
     Args:
         QtWidgets (_type_): _description_
