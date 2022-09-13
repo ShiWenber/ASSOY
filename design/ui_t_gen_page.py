@@ -58,6 +58,10 @@ class Ui_t_gen_page(object):
         self.pb_clear.setMaximumSize(QtCore.QSize(150, 23))
         self.pb_clear.setObjectName("pb_clear")
         self.horizontalLayout.addWidget(self.pb_clear)
+        self.pb_open_path = QtWidgets.QPushButton(t_gen_page)
+        self.pb_open_path.setMaximumSize(QtCore.QSize(150, 23))
+        self.pb_open_path.setObjectName("pb_open_path")
+        self.horizontalLayout.addWidget(self.pb_open_path)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(t_gen_page)
@@ -95,3 +99,4 @@ class Ui_t_gen_page(object):
         self.tableWidget.setSortingEnabled(__sortingEnabled)
         self.pb_repro.setText(_translate("t_gen_page", "重新生成"))
         self.pb_clear.setText(_translate("t_gen_page", "清空"))
+        self.pb_open_path.setText(_translate("t_gen_page", "打开文件位置"))
