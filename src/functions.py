@@ -52,7 +52,8 @@ class Student(object):
 
     def __init__(self, name=None, numTable=None, strTable=None):
         self.name = name
-        self.dutyTime = []  # 存放学生的值班时间，每个元素为一个二元列表例如用[0,4]表示['周一', '9-10节']，用append()方法添加,用len()方法获取长度
+        # 存放学生的值班时间，每个元素为一个二元列表例如用[0,4]表示['周一', '9-10节']，用append()方法添加,用len()方法获取长度
+        self.dutyTime = []
         self.numTable = numTable
         self.strTable = strTable
         # self.tableRow, self.tableColumn = self.numTable.shape
@@ -138,6 +139,7 @@ def to_freeTable(students, sumkey=False):
     Returns:
         freeTable_str, freeTable_obj: 保存到文件，并且返回一个字符串表和一个对象表 
     """
+    # 根据从学生课表中取出一个用来做空闲表（能直接利用表头，带来的问题是一旦学生列表没有内容就会因数组下标越界而错误停止）
     freeTable = pd.DataFrame(data='', index=students[0].getNumTable(
     ).index, columns=students[0].getNumTable().columns)
     row, column = students[0].getNumTable().shape
@@ -147,9 +149,8 @@ def to_freeTable(students, sumkey=False):
     for i in range(row):
         for j in range(column):
             freeTable_obj.iloc[i, j] = list()
-    print(freeTable_obj) 
+    print(freeTable_obj)
 
-    
     for i in range(row):
         for j in range(column):
             singular_num = 0
@@ -162,7 +163,8 @@ def to_freeTable(students, sumkey=False):
                     singular_num += 1
                     even_num += 1
 
-                    freeTable_obj.iloc[i, j].append(student_i) # 这里对象表没有考虑单双周，留作后面改进
+                    freeTable_obj.iloc[i, j].append(
+                        student_i)  # 这里对象表没有考虑单双周，留作后面改进
 
                 elif student_i.getNumTable().iloc[i, j] == 2:  # 双数周有课，单数周没课
                     freeTable.iloc[i, j] += student_i.getName() + '(单数周空闲)\n'
@@ -213,8 +215,9 @@ def to_freeTable(students, sumkey=False):
 def to_dutyTable(students):
     import random as rd
     # 获得一个freeTable（DataFrame类型，表中元素为student列表类型）的对象
-    freeTable_str, freeTable_obj = to_freeTable(students)
     # 用来记录每个单元格的空闲人数，sort_list中每个单元的元素为三元列表，[i, j, num]，i, j用来定位该时间快在表中的行列数，num为空闲人数
+    freeTable_str, freeTable_obj = to_freeTable(students)
+
     sort_list = []
     for i in range(5):
         for j in range(7):
@@ -247,7 +250,7 @@ def to_dutyTable(students):
                 print(selected_student.getName())
                 print(selected_student.getDutyTime())
                 res.append([i, j, selected_student])
-                
+
                 # 从freeTable中删除该同学
                 freeTable_obj.iloc[i, j].remove(selected_student)
                 freeTable_obj
@@ -275,13 +278,29 @@ def to_dutyTable(students):
             # 更新该区可选人数
             sort_list[0][2] = len(freeTable_obj.iloc[i, j])
             continue
-    return res, students
 
+    dutyTable = pd.DataFrame(
+        data='', index=freeTable_str.index, columns=freeTable_str.columns)
+    row, column = freeTable_str.shape
 
-       
+    res_copy = res.copy()
+    exist: int = 0
+    for i in range(row):
+        for j in range(column):
+            for k in res_copy:
+                if k[0] == i and k[1] == j:
+                    # print(k[2].getName(), end=' ')
+                    dutyTable.iloc[i, j] = k[2].getName() 
+                    res_copy.remove(k)
+                    exist = 1
+                    break
+            if exist == 0:
+                # print('-', end=' ')
+                dutyTable.iloc[i, j] = '无'
+            else:
+                exist = 0
 
-
-    
+    return res, students, dutyTable
 
 
 def to_numTable(inputSheet):
@@ -331,7 +350,8 @@ def to_numTable(inputSheet):
         nextPeriod = str_sheet.iloc[i + 1, 0]
         if nextPeriod == '':
             for j in range(1, str_sheet.shape[1]):
-                tempstr = str_sheet.iloc[i, j] + '\n' + str_sheet.iloc[i + 1, j]
+                tempstr = str_sheet.iloc[i, j] + \
+                    '\n' + str_sheet.iloc[i + 1, j]
                 str_sheet.iloc[i, j] = tempstr
 
             str_sheet.drop(str_sheet.index[i + 1], inplace=True)

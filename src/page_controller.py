@@ -1,13 +1,14 @@
 """
 信号量定义为类的方法是为了和其他界面通信，如果仅仅在页面内部使用信号量，则可以直接connect()方法
 """
-from locale import currency
-from msilib.schema import ComboBox
-from re import U
-from turtle import clear
-from matplotlib.pyplot import show
+# from locale import currency
+# from msilib.schema import ComboBox
+# from re import U
+# from turtle import clear
+# from matplotlib.pyplot import show
 
-from zmq import EVENT_ALL_V1
+# from zmq import EVENT_ALL_V1
+
 from ui.ui_start_page import Ui_MainWindow
 from ui.ui_t_page import Ui_t_page  # 表格展示界面
 from ui.ui_t_gen_page import Ui_t_gen_page  # 表格生成界面
@@ -202,6 +203,7 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
 
         self.pb_repro.clicked.connect(self.repro)
         self.pb_clear.clicked.connect(self.clearTable)
+        self.pb_open_path.clicked.connect(self.open_path)
 
         self.students = getStudentsList()
         self.freeTable_str, self.freeTable_obj = to_freeTable(self.students)
@@ -209,7 +211,7 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
         # combox = QtWidgets.QComboBox()
         # combox.addItem("请选择学生")
 
-        self.dutylist, self.students = to_dutyTable(self.students)
+        self.dutylist, self.students, dutyTable = to_dutyTable(self.students)
 
         print(self.dutylist)
         # 打印值班表
@@ -234,6 +236,7 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
 
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.resizeRowsToContents()
+        dutyTable.to_excel("./dutyTable/dutyTable.xlsx")
 
     def clearTable(self):
         self.tableWidget.clearContents()
@@ -245,10 +248,9 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
         # combox = QtWidgets.QComboBox()
         # combox.addItem("请选择学生")
 
-        self.dutylist, self.students = to_dutyTable(self.students)
-
+        self.dutylist, self.students, dutyTable = to_dutyTable(self.students)
+        
         print(self.dutylist)
-        # 打印值班表
         exist = 0
         for i in range(5):
             for j in range(7):
@@ -266,10 +268,11 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
                         i, j, QtWidgets.QTableWidgetItem('无'))
                 else:
                     exist = 0
-            print()
 
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.resizeRowsToContents()
+        dutyTable.to_excel('./dutyTable/dutyTable.xlsx')
+
 
     def closeEvent(self, event):
         """重写closeEvent方法，实现窗口关闭时询问是否返回主界面
@@ -291,9 +294,12 @@ class T_gen_page(QtWidgets.QWidget, Ui_t_gen_page):
     def go_start_page(self):
         self.switch_view_start_page.emit()
 
+    def open_path(self):
+        os.popen("explorer.exe " + ".\\dutyTable")
+ 
+
+
 # 生成空闲表
-
-
 class Free_t_page(QtWidgets.QWidget, Ui_free_t_page):
     """生成空闲表
 
