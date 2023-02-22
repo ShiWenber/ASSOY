@@ -17,6 +17,15 @@ def main():
 
 if __name__ == '__main__':
     print('开始运行')
+    # 如果不存在就创建文件夹
+    if (not os.path.exists('./input')):
+        os.mkdir('./input')
+    if (not os.path.exists('./numTable')):
+        os.mkdir('./numTable')
+    if (not os.path.exists('./strTable')):
+        os.mkdir('./strTable')
+    if (not os.path.exists('./dutyTable')):
+        os.mkdir('./dutyTable')
     main()
 
     
